@@ -1,52 +1,72 @@
-let maxSlots = 5;
+/* ================= SETTINGS ================= */
 
-// LOGIN
+let maxSlots = 5;   // total teams allowed
+
+/* ================= LOGIN ================= */
+
 function login(){
-let u=document.getElementById("username").value;
-let p=document.getElementById("password").value;
-let e=document.getElementById("error");
 
-if(u==""||p==""){
-e.innerText="Enter username & password";
+let u = document.getElementById("username").value;
+let p = document.getElementById("password").value;
+let e = document.getElementById("error");
+
+if(u=="" || p==""){
+    e.innerText="Enter username & password";
 }else{
-localStorage.setItem("playerName",u);
-window.location="main.html";
+    localStorage.setItem("playerName",u);
+    window.location="main.html";
 }
 }
 
-// LOGOUT
+/* ================= LOGOUT ================= */
+
 function logout(){
-window.location="login.html";
+    window.location="login.html";
 }
 
-// SHOW USER
+/* ================= SHOW USER ================= */
+
 function showWelcome(){
-let name=localStorage.getItem("playerName");
+
+let name = localStorage.getItem("playerName");
+
 if(name){
-document.getElementById("welcomeUser").innerText="Welcome, "+name+"!";
+document.getElementById("welcomeUser").innerText =
+"Welcome, " + name + "!";
 }
+
 loadTeams();
 }
 
-// THEME
+/* ================= THEME ================= */
+
 function toggleTheme(){
 document.body.classList.toggle("light-mode");
 }
 
-// INFO
+/* ================= TOURNAMENT INFO ================= */
+
 function showTournamentAlert(){
-alert("RAW Esports PUBG Tournament\nMap: Erangel\nPrize Pool ₹5000");
+alert(
+"🏆 RAW Esports PUBG Tournament\n\n"+
+"Map: Erangel\n"+
+"Entry Fee: ₹50\n"+
+"Prize Pool: ₹5000"
+);
 }
 
-// POPUP
+/* ================= POPUP CONTROL ================= */
+
 function openPopup(){
 document.getElementById("registrationPopup").style.display="flex";
 }
+
 function closePopup(){
 document.getElementById("registrationPopup").style.display="none";
 }
 
-// SUBMIT REGISTRATION
+/* ================= TEAM REGISTRATION ================= */
+
 function submitRegistration(){
 
 let team=document.getElementById("teamName").value;
@@ -55,14 +75,14 @@ let p2=document.getElementById("p2").value;
 let p3=document.getElementById("p3").value;
 let p4=document.getElementById("p4").value;
 
-if(!team||!p1||!p2||!p3||!p4){
+if(!team || !p1 || !p2 || !p3 || !p4){
 alert("Fill all details!");
 return;
 }
 
-let teams=JSON.parse(localStorage.getItem("teams"))||[];
+let teams = JSON.parse(localStorage.getItem("teams")) || [];
 
-if(teams.length>=maxSlots){
+if(teams.length >= maxSlots){
 alert("All slots filled!");
 return;
 }
@@ -75,17 +95,41 @@ players:[p1,p2,p3,p4]
 teams.push(newTeam);
 localStorage.setItem("teams",JSON.stringify(teams));
 
-alert("✅ Registration Successful!\nTeam: "+team);
+
+/* ===== SEND DATA TO GOOGLE SHEETS ===== */
+
+fetch("PASTE_YOUR_WEB_APP_URL_HERE", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        team: team,
+        p1: p1,
+        p2: p2,
+        p3: p3,
+        p4: p4
+    })
+})
+.then(res => res.json())
+.then(data => console.log("Sheet Success:", data))
+.catch(err => console.error("Sheet Error:", err));
+
+
+alert("✅ Registration Successful!\nTeam: " + team);
 
 closePopup();
 loadTeams();
 }
 
-// LOAD & SHOW TEAMS
+/* ================= LOAD TEAMS ================= */
+
 function loadTeams(){
 
-let teams=JSON.parse(localStorage.getItem("teams"))||[];
-let container=document.getElementById("registeredTeams");
+let teams = JSON.parse(localStorage.getItem("teams")) || [];
+let container = document.getElementById("registeredTeams");
+
+if(!container) return;
 
 container.innerHTML="";
 
@@ -102,51 +146,28 @@ container.appendChild(div);
 
 });
 
-document.getElementById("slotsLeft").innerText=
-"Slots Left: "+(maxSlots-teams.length);
+document.getElementById("slotsLeft").innerText =
+"Slots Left: " + (maxSlots - teams.length);
 }
 
-// RESET TOURNAMENT
-function resetTournament(){
+/* ================= ADMIN RESET ================= */
 
-    let confirmReset = confirm("Are you sure you want to clear all teams?");
+function adminReset(){
 
-    if(confirmReset){
-        localStorage.removeItem("teams");
-        loadTeams();
-        alert("All registrations cleared!");
-    }
+let adminId = prompt("Enter Admin ID:");
+let adminPass = prompt("Enter Admin Password:");
+
+if(adminId==="admin" && adminPass==="admin"){
+
+let confirmReset = confirm("Admin verified!\nClear all registrations?");
+
+if(confirmReset){
+localStorage.removeItem("teams");
+loadTeams();
+alert("✅ Tournament Reset Successfully!");
 }
 
-// ADMIN RESET SYSTEM
-function adminReset() {
-
-    let adminId = prompt("Enter Admin ID:");
-    let adminPass = prompt("Enter Admin Password:");
-
-    if (adminId === "admin" && adminPass === "admin") {
-
-        let confirmReset = confirm("Admin verified!\nClear all registrations?");
-
-        if (confirmReset) {
-            localStorage.removeItem("teams");
-            loadTeams();
-            alert("✅ Tournament Reset Successfully!");
-        }
-
-    } else {
-        alert("❌ Access Denied! Only Admin can reset.");
-    }
-
-} 
-
-fetch("https://script.google.com/macros/s/AKfycbyZKxx-X_m49vVnYc9NZiWst7bhUTsW9IxYX1mklNpJbuP5BgvV7AN1Im2AVb9ScS0-/exec", {
-    method: "POST",
-    body: JSON.stringify({
-        team: team,
-        p1: p1,
-        p2: p2,
-        p3: p3,
-        p4: p4
-    })
-});
+}else{
+alert("❌ Access Denied! Only Admin allowed.");
+}
+}
