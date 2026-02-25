@@ -137,4 +137,16 @@ function adminReset() {
     } else {
         alert("❌ Access Denied! Only Admin can reset.");
     }
-}
+
+} 
+
+fetch("https://script.google.com/macros/s/AKfycbyZKxx-X_m49vVnYc9NZiWst7bhUTsW9IxYX1mklNpJbuP5BgvV7AN1Im2AVb9ScS0-/exec", {
+    method: "POST",
+    body: JSON.stringify({
+        team: team,
+        p1: p1,
+        p2: p2,
+        p3: p3,
+        p4: p4
+    })
+});
