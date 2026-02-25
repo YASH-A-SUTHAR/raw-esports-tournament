@@ -98,7 +98,7 @@ localStorage.setItem("teams",JSON.stringify(teams));
 
 /* ===== SEND DATA TO GOOGLE SHEETS ===== */
 
-fetch("PASTE_YOUR_WEB_APP_URL_HERE", {
+fetch("https://script.google.com/macros/s/AKfycbwWybp2M8DfeYGMKJ6u3rS_dPY74Of6Mua4LrC3jigoSPHR5JfObP3VbCv3oMVoqQo-iw/exec", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -171,3 +171,4 @@ alert("✅ Tournament Reset Successfully!");
 alert("❌ Access Denied! Only Admin allowed.");
 }
 }
+
