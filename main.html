@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RAW Esports Tournament</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="showWelcome()">
+
+<header>
+    <h2 id="welcomeUser"></h2>
+    <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<div class="banner">
+    <img src="banner2.png" alt="Tournament Banner">
+</div>
+
+<section class="details">
+    <h2>Tournament Details</h2>
+    <p>Game: PUBG</p>
+    <p>Map: Erangel</p>
+    <p>Entry Fee: ₹50</p>
+    <p>Prize Pool: ₹5000</p>
+</section>
+
+<div class="center">
+    <button onclick="openPopup()">Register Team</button>
+    <button onclick="toggleTheme()">Toggle Theme</button>
+    <button onclick="showTournamentAlert()">Tournament Info</button>
+    <button onclick="adminReset()">Reset Tournament</button>
+</div>
+
+<!-- REGISTERED TEAMS -->
+<section class="teams">
+    <h2>Registered Teams</h2>
+    <p id="slotsLeft"></p>
+    <div id="registeredTeams"></div>
+</section>
+
+<!-- POPUP -->
+<div id="registrationPopup" class="popup">
+<div class="popup-content">
+
+<h2>Team Registration</h2>
+
+<input id="teamName" placeholder="Team Name">
+<input id="p1" placeholder="Player 1">
+<input id="p2" placeholder="Player 2">
+<input id="p3" placeholder="Player 3">
+<input id="p4" placeholder="Player 4">
+
+<button onclick="submitRegistration()">Submit</button>
+<button onclick="closePopup()">Cancel</button>
+
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
